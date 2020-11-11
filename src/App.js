@@ -1,25 +1,80 @@
-import logo from './logo.svg';
-import './App.css';
+import { Component } from 'react';
 
-function App() {
+class App extends Component {
+  state = {
+    newItem: '',
+    list: []
+  }
+
+  updatedInput(key, value) {
+    this.setState({
+      [key]: [value]
+    })
+  }
+
+  addItem() {
+    const newItem = {
+      id: 1 + Math.random(),
+      value: this.state.newItem.slice()
+    }
+
+    const list = [...this.state.list]
+
+    list.push(newItem)
+
+    this.setState({
+      newItem:'',
+      list
+    })
+  }
+
+  deleteItem(id) {
+    const list = [...this.state.list]
+
+    const filteredList = list.filter(item => item.id !== id)
+
+    this.setState({
+      list: filteredList
+    })
+  }
+
+  render() {
+
+    const { newItem, list } = this.state;
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <div>
+        Add items here
+        <br/>
+        <input 
+          type="text"
+          placeholder="Type items here"
+          value={newItem}
+          onChange = {e => this.updatedInput("newItem", e.target.value)}
+        />
+        <button
+          onClick={() => this.addItem()}
         >
-          Learn React
-        </a>
-      </header>
+          Add
+        </button>
+        <br/>
+        <ul>
+          {list.map(item => {
+            return (
+              <li key={item.id}>{item.value}
+              <button
+                onClick={() => this.deleteItem(item.id)}
+              >
+                X
+              </button></li>
+            )
+          })}
+        </ul>
+      </div>
     </div>
-  );
+    );
+  }
 }
 
 export default App;
